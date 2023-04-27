@@ -1,4 +1,14 @@
 services:
+  db:
+    image: postgres:15
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hotwired_playground
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
   rails:
     build: .
     ports:
@@ -6,3 +16,7 @@ services:
     volumes:
       - .:/myapp
     command: rails s -e development -b 0.0.0.0
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://myuser:password@db/hotwired_playground
